@@ -1,0 +1,209 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Scrolling News</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .news-container {
+            width: 100%;
+            max-width: 700px;
+            height: 350px; /* Height to fit 6 news items */
+            overflow: hidden;
+            background: black;
+            padding: 10px;
+            border-radius: 10px;
+            position: relative;
+            white-space: nowrap ;
+        }
+        .news-ticker {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            animation: scroll 17s linear infinite;
+            
+        }
+        .news-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            font-size: 25px;
+        }
+        .news-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        @keyframes scroll {
+             from{
+                transform: translateX(0%);
+             }
+             to {
+                transform: translateX(-100%);
+             }
+
+             
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Top Stories</h2>
+    <div class="news-container">
+        <div class="news-ticker" id="newsTicker">
+            Loading latest finance news...
+        </div>
+    </div>
+
+    <script>
+        async function fetchFinanceNews() {
+            const apiKey = "d71bf05d0a854bb7852fe5cc9fae0d18"; 
+            const url = `https://newsapi.org/v2/top-headlines?category=business&language=en&apiKey=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.articles) {
+                    let newsHTML = "";
+                    data.articles.slice(0, 7).forEach(article => { // Show only 6 items at a time
+                        newsHTML += `
+                            <div class="news-item">
+                                <img src="${article.urlToImage}" alt="News Image">
+                                <span>${article.title} - <b>${article.source.name}</b></span>
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById("newsTicker").innerHTML = newsHTML;
+                } else {
+                    document.getElementById("newsTicker").textContent = "⚠ Unable to fetch news.";
+                }
+            } catch (error) {
+                document.getElementById("newsTicker").textContent = "⚠ Error fetching news.";
+            }
+        }
+
+        // Fetch news initially and update every 60 seconds
+        fetchFinanceNews();
+        setInterval(fetchFinanceNews, 50000);
+    </script>
+
+</body>
+</html>
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Scrolling News</title>
+    <style>
+      :root {
+        --speed: 10s; /* Adjust scrolling speed */
+      }
+
+      body {
+        background-color: #121212;
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+      }
+      .news-container {
+        width: 100%;
+        max-width: 700px;
+        height: 300px;
+        overflow: hidden;
+        background: black;
+        padding: 10px;
+        border-radius: 10px;
+        position: relative;
+      }
+      .news-ticker {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        /* animation: scroll var(--speed) linear infinite; */
+        animation: scroll var(--speed)cubic-bezier(0.10, 0.50, 0.50, 0.80) infinite;
+      }
+      .news-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        font-size: 18px;
+      }
+      .news-item img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        border-radius: 5px;
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateY(100%);
+        }
+        100% {
+          transform: translateY(-100%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Top Stories</h2>
+    <div class="news-container">
+      <div class="news-ticker" id="newsTicker">
+        Loading latest finance news...
+      </div>
+    </div>
+    <script>
+      async function fetchFinanceNews() {
+        const apiKey = "d71bf05d0a854bb7852fe5cc9fae0d18";
+        const url = `https://newsapi.org/v2/top-headlines?category=business&language=en&apiKey=${apiKey}`;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          if (data.articles) {
+            let newsHTML = "";
+            data.articles.slice(0, 7).forEach((article) => {
+              newsHTML += `
+                            <div class="news-item">
+                                <img src="${article.urlToImage}" alt="News Image">
+                                <span>${article.title} - <b>${article.source.name}</b></span>
+                            </div>
+                        `;
+            });
+            document.getElementById("newsTicker").innerHTML = newsHTML;
+          } else {
+            document.getElementById("newsTicker").textContent =
+              "⚠ Unable to fetch news.";
+          }
+        } catch (error) {
+          document.getElementById("newsTicker").textContent =
+            "⚠ Error fetching news.";
+        }
+      }
+
+      fetchFinanceNews();
+      setInterval(fetchFinanceNews, 60000);
+    </script>
+  </body>
+</html>
